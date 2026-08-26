@@ -38,7 +38,8 @@
     .brand span,.y{color:#e9aa00}
     .tabs{
       display:flex;
-      gap:8px
+      gap:8px;
+      flex-wrap:wrap
     }
     button{
       border:0;
@@ -108,6 +109,9 @@
       margin:12px 0;
       font-weight:700
     }
+    .success{
+      background:#e8f7ed
+    }
     .row{
       display:flex;
       gap:10px;
@@ -145,6 +149,12 @@
       background:#eee;
       margin-top:10px
     }
+    .settings-card{
+      margin-top:25px
+    }
+    .settings-card input{
+      margin-bottom:5px
+    }
     @media(max-width:750px){
       .grid{grid-template-columns:1fr}
       h1{font-size:40px}
@@ -160,13 +170,17 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand">⚡ Fetch<span>Now</span></div>
+
+    <div class="brand" id="brandName">
+      ⚡ Fetch<span>Now</span>
+    </div>
 
     <div class="tabs">
       <button class="tab active" onclick="showPage('customer',this)">Customer</button>
       <button class="tab" onclick="showPage('partner',this)">Partner</button>
       <button class="tab" onclick="showPage('admin',this)">Admin</button>
     </div>
+
   </div>
 </header>
 
@@ -175,12 +189,12 @@
   <!-- CUSTOMER -->
   <section id="customer" class="page active">
 
-    <h1>
+    <h1 id="mainHeading">
       Need it urgently?<br>
       <span class="y">We'll fetch it.</span>
     </h1>
 
-    <p class="muted">
+    <p class="muted" id="tagline">
       Customer → Request → Fare → Partner → Live Status → Payment
     </p>
 
@@ -290,6 +304,7 @@
     <h1>Admin <span class="y">Dashboard</span></h1>
 
     <div class="statgrid">
+
       <div class="stat">
         <strong id="totalOrders">0</strong>
         Orders
@@ -304,11 +319,65 @@
         <strong id="partnersCount">0</strong>
         Partners
       </div>
+
     </div>
 
     <div class="card">
       <h2>All orders</h2>
       <div id="adminOrders"></div>
+    </div>
+
+
+    <!-- SETTINGS -->
+    <div class="card settings-card">
+
+      <h2>⚙️ Settings</h2>
+
+      <p class="muted">
+        Yahan se website ka basic content aur delivery pricing change kar sakte ho.
+      </p>
+
+      <label>Website Name</label>
+      <input id="settingBrand" placeholder="FetchNow">
+
+      <label>Main Heading</label>
+      <input id="settingHeading" placeholder="Need it urgently?">
+
+      <label>Highlight Heading</label>
+      <input id="settingHighlight" placeholder="We'll fetch it.">
+
+      <label>Tagline</label>
+      <input id="settingTagline"
+        placeholder="Customer → Request → Fare → Partner → Live Status → Payment">
+
+      <label>Standard Base Fare (₹)</label>
+      <input id="standardBase" type="number" min="0">
+
+      <label>Standard Per KM (₹)</label>
+      <input id="standardKm" type="number" min="0">
+
+      <label>Express Base Fare (₹)</label>
+      <input id="expressBase" type="number" min="0">
+
+      <label>Express Per KM (₹)</label>
+      <input id="expressKm" type="number" min="0">
+
+      <label>Urgent Base Fare (₹)</label>
+      <input id="urgentBase" type="number" min="0">
+
+      <label>Urgent Per KM (₹)</label>
+      <input id="urgentKm" type="number" min="0">
+
+      <button class="primary" onclick="saveSettings()">
+        💾 Save Settings
+      </button>
+
+      <button class="danger" onclick="resetSettings()">
+        Reset Settings
+      </button>
+
+      <div id="settingsMessage"></div>
+
     </div>
 
   </section>
@@ -320,14 +389,65 @@
 
 const KEY = "fetchnow_mvp";
 
-let data = JSON.parse(
-  localStorage.getItem(KEY) ||
-  '{"orders":[],"partners":[]}'
+const SETTINGS_KEY = "fetchnow_settings";
+
+
+/* DEFAULT SETTINGS */
+
+const defaultSettings = {
+
+  brand: "FetchNow",
+
+  heading: "Need it urgently?",
+
+  highlight: "We'll fetch it.",
+
+  tagline:
+    "Customer → Request → Fare → Partner → Live Status → Payment",
+
+  standardBase: 40,
+  standardKm: 12,
+
+  expressBase: 60,
+  expressKm: 15,
+
+  urgentBase: 90,
+  urgentKm: 20
+
+};
+
+
+let settings = JSON.parse(
+  localStorage.getItem(SETTINGS_KEY)
+  || JSON.stringify(defaultSettings)
 );
 
+
+let data = JSON.parse(
+  localStorage.getItem(KEY)
+  || '{"orders":[],"partners":[]}'
+);
+
+
 function save(){
-  localStorage.setItem(KEY, JSON.stringify(data));
+
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(data)
+  );
+
 }
+
+
+function saveSettingsData(){
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify(settings)
+  );
+
+}
+
 
 function showPage(id, btn){
 
@@ -343,42 +463,231 @@ function showPage(id, btn){
   if(btn) btn.classList.add("active");
 
   if(id === "partner") renderPartner();
-  if(id === "admin") renderAdmin();
+
+  if(id === "admin"){
+    renderAdmin();
+    loadSettingsForm();
+  }
+
   if(id === "customer") renderCustomer();
+
 }
 
 
 function calculateFare(distance, speed){
 
-  let base = 40;
-  let perKm = 12;
+  let base = settings.standardBase;
+
+  let perKm = settings.standardKm;
+
 
   if(speed === "express"){
-    base = 60;
-    perKm = 15;
+
+    base = settings.expressBase;
+    perKm = settings.expressKm;
+
   }
+
 
   if(speed === "urgent"){
-    base = 90;
-    perKm = 20;
+
+    base = settings.urgentBase;
+    perKm = settings.urgentKm;
+
   }
 
-  return Math.round(base + distance * perKm);
+
+  return Math.round(
+    base + distance * perKm
+  );
+
 }
 
 
 function statusText(status){
 
   const map = {
-    requested: "🟡 Searching for partner",
-    accepted: "🔵 Partner accepted",
-    picked_up: "📦 Item picked up",
-    on_the_way: "🚴 On the way",
-    delivered: "🟢 Delivered",
-    paid: "💳 Payment completed"
+
+    requested:
+      "🟡 Searching for partner",
+
+    accepted:
+      "🔵 Partner accepted",
+
+    picked_up:
+      "📦 Item picked up",
+
+    on_the_way:
+      "🚴 On the way",
+
+    delivered:
+      "🟢 Delivered",
+
+    paid:
+      "💳 Payment completed"
+
   };
 
   return map[status] || status;
+
+}
+
+
+/* APPLY WEBSITE SETTINGS */
+
+function applySettings(){
+
+  document.title =
+    settings.brand + " - All in One MVP";
+
+
+  document.getElementById("brandName").innerHTML =
+    "⚡ " +
+    settings.brand;
+
+
+  document.getElementById("mainHeading").innerHTML = `
+
+    ${settings.heading}<br>
+
+    <span class="y">
+      ${settings.highlight}
+    </span>
+
+  `;
+
+
+  document.getElementById("tagline")
+    .textContent =
+    settings.tagline;
+
+}
+
+
+/* SETTINGS FORM */
+
+function loadSettingsForm(){
+
+  document.getElementById("settingBrand").value =
+    settings.brand;
+
+  document.getElementById("settingHeading").value =
+    settings.heading;
+
+  document.getElementById("settingHighlight").value =
+    settings.highlight;
+
+  document.getElementById("settingTagline").value =
+    settings.tagline;
+
+  document.getElementById("standardBase").value =
+    settings.standardBase;
+
+  document.getElementById("standardKm").value =
+    settings.standardKm;
+
+  document.getElementById("expressBase").value =
+    settings.expressBase;
+
+  document.getElementById("expressKm").value =
+    settings.expressKm;
+
+  document.getElementById("urgentBase").value =
+    settings.urgentBase;
+
+  document.getElementById("urgentKm").value =
+    settings.urgentKm;
+
+}
+
+
+function saveSettings(){
+
+  settings.brand =
+    document.getElementById("settingBrand").value
+    || "FetchNow";
+
+
+  settings.heading =
+    document.getElementById("settingHeading").value
+    || "Need it urgently?";
+
+
+  settings.highlight =
+    document.getElementById("settingHighlight").value
+    || "We'll fetch it.";
+
+
+  settings.tagline =
+    document.getElementById("settingTagline").value
+    || defaultSettings.tagline;
+
+
+  settings.standardBase =
+    Number(document.getElementById("standardBase").value)
+    || 0;
+
+
+  settings.standardKm =
+    Number(document.getElementById("standardKm").value)
+    || 0;
+
+
+  settings.expressBase =
+    Number(document.getElementById("expressBase").value)
+    || 0;
+
+
+  settings.expressKm =
+    Number(document.getElementById("expressKm").value)
+    || 0;
+
+
+  settings.urgentBase =
+    Number(document.getElementById("urgentBase").value)
+    || 0;
+
+
+  settings.urgentKm =
+    Number(document.getElementById("urgentKm").value)
+    || 0;
+
+
+  saveSettingsData();
+
+  applySettings();
+
+  document.getElementById("settingsMessage").innerHTML = `
+
+    <div class="status success">
+      ✅ Settings saved successfully!
+    </div>
+
+  `;
+
+}
+
+
+function resetSettings(){
+
+  settings = {
+    ...defaultSettings
+  };
+
+  saveSettingsData();
+
+  loadSettingsForm();
+
+  applySettings();
+
+  document.getElementById("settingsMessage").innerHTML = `
+
+    <div class="status">
+      Settings reset to default.
+    </div>
+
+  `;
+
 }
 
 
@@ -389,18 +698,25 @@ document.getElementById("customerForm")
 
   e.preventDefault();
 
+
   const distance =
-    Number(document.getElementById("distance").value);
+    Number(
+      document.getElementById("distance").value
+    );
+
 
   const speed =
     document.getElementById("speed").value;
 
+
   const fare =
     calculateFare(distance, speed);
 
+
   const order = {
 
-    id: "FN" + Date.now(),
+    id:
+      "FN" + Date.now(),
 
     name:
       document.getElementById("cName").value,
@@ -418,23 +734,29 @@ document.getElementById("customerForm")
       document.getElementById("item").value,
 
     distance,
+
     speed,
+
     fare,
 
-    status: "requested",
+    status:
+      "requested",
 
-    partnerId: null,
+    partnerId:
+      null,
 
     createdAt:
       new Date().toLocaleString()
 
   };
 
+
   data.orders.unshift(order);
 
   save();
 
   renderCustomer();
+
 
   alert(
     "Request created! Fare: ₹" + fare
@@ -448,15 +770,20 @@ function renderCustomer(){
   const box =
     document.getElementById("customerOrder");
 
+
   if(!data.orders.length){
 
     box.innerHTML =
       '<p class="muted">Create an order to see live status.</p>';
 
     return;
+
   }
 
-  const o = data.orders[0];
+
+  const o =
+    data.orders[0];
+
 
   box.innerHTML = `
 
@@ -464,7 +791,10 @@ function renderCustomer(){
       ${statusText(o.status)}
     </div>
 
-    <p><b>Order ID:</b> ${o.id}</p>
+    <p>
+      <b>Order ID:</b>
+      ${o.id}
+    </p>
 
     <p>
       <b>${o.pickup}</b>
@@ -472,11 +802,19 @@ function renderCustomer(){
       <b>${o.drop}</b>
     </p>
 
-    <p><b>Item:</b> ${o.item}</p>
+    <p>
+      <b>Item:</b>
+      ${o.item}
+    </p>
 
-    <p><b>Distance:</b> ${o.distance} km</p>
+    <p>
+      <b>Distance:</b>
+      ${o.distance} km
+    </p>
 
-    <div class="fare">₹${o.fare}</div>
+    <div class="fare">
+      ₹${o.fare}
+    </div>
 
     <p class="small">
       Created: ${o.createdAt}
@@ -485,7 +823,8 @@ function renderCustomer(){
     ${
       o.status === "delivered"
       ? `
-        <button class="primary"
+        <button
+          class="primary"
           onclick="payOrder('${o.id}')">
           Pay ₹${o.fare}
         </button>
@@ -496,7 +835,7 @@ function renderCustomer(){
     ${
       o.status === "paid"
       ? `
-        <div class="status">
+        <div class="status success">
           ✅ Payment successful
         </div>
       `
@@ -504,23 +843,34 @@ function renderCustomer(){
     }
 
   `;
+
 }
 
 
 function payOrder(id){
 
   const order =
-    data.orders.find(o => o.id === id);
+    data.orders.find(
+      o => o.id === id
+    );
+
 
   if(!order) return;
 
-  order.status = "paid";
+
+  order.status =
+    "paid";
+
 
   save();
 
   renderCustomer();
 
-  alert("Payment successful! 💳");
+
+  alert(
+    "Payment successful! 💳"
+  );
+
 }
 
 
@@ -531,9 +881,11 @@ document.getElementById("partnerForm")
 
   e.preventDefault();
 
+
   const partner = {
 
-    id: "P" + Date.now(),
+    id:
+      "P" + Date.now(),
 
     name:
       document.getElementById("pName").value,
@@ -544,22 +896,27 @@ document.getElementById("partnerForm")
     vehicle:
       document.getElementById("vehicle").value,
 
-    online: true
+    online:
+      true
 
   };
+
 
   data.partners.push(partner);
 
   save();
+
 
   localStorage.setItem(
     "fetchnow_partner",
     partner.id
   );
 
-  document.getElementById("partnerInfo").innerHTML = `
 
-    <div class="status">
+  document.getElementById("partnerInfo")
+    .innerHTML = `
+
+    <div class="status success">
       🟢 You are ONLINE
     </div>
 
@@ -573,6 +930,7 @@ document.getElementById("partnerForm")
 
   `;
 
+
   renderPartner();
 
 });
@@ -583,8 +941,12 @@ function renderPartner(){
   const box =
     document.getElementById("partnerOrders");
 
+
   const partnerId =
-    localStorage.getItem("fetchnow_partner");
+    localStorage.getItem(
+      "fetchnow_partner"
+    );
+
 
   if(!partnerId){
 
@@ -592,12 +954,15 @@ function renderPartner(){
       '<p class="muted">Register first to see orders.</p>';
 
     return;
+
   }
+
 
   const open =
     data.orders.filter(
       o => o.status === "requested"
     );
+
 
   if(!open.length){
 
@@ -605,9 +970,12 @@ function renderPartner(){
       '<p class="muted">No new orders right now.</p>';
 
     return;
+
   }
 
-  box.innerHTML = open.map(o => `
+
+  box.innerHTML =
+    open.map(o => `
 
     <div class="order">
 
@@ -627,7 +995,8 @@ function renderPartner(){
         <b>Fare: ₹${o.fare}</b>
       </p>
 
-      <button class="primary"
+      <button
+        class="primary"
         onclick="acceptOrder('${o.id}')">
         Accept Order
       </button>
@@ -642,29 +1011,48 @@ function renderPartner(){
 function acceptOrder(id){
 
   const partnerId =
-    localStorage.getItem("fetchnow_partner");
+    localStorage.getItem(
+      "fetchnow_partner"
+    );
+
 
   if(!partnerId){
 
-    alert("Register as partner first.");
+    alert(
+      "Register as partner first."
+    );
 
     return;
+
   }
 
+
   const order =
-    data.orders.find(o => o.id === id);
+    data.orders.find(
+      o => o.id === id
+    );
+
 
   if(!order) return;
 
-  order.status = "accepted";
 
-  order.partnerId = partnerId;
+  order.status =
+    "accepted";
+
+
+  order.partnerId =
+    partnerId;
+
 
   save();
 
   renderPartner();
 
-  alert("Order accepted! 🚴");
+
+  alert(
+    "Order accepted! 🚴"
+  );
+
 
   showPage(
     "partner",
@@ -681,23 +1069,36 @@ function renderAdmin(){
   const total =
     data.orders.length;
 
+
   const active =
     data.orders.filter(
-      o => !["delivered","paid"].includes(o.status)
+      o =>
+        !["delivered","paid"]
+        .includes(o.status)
     ).length;
 
-  document.getElementById("totalOrders")
-    .textContent = total;
 
-  document.getElementById("activeOrders")
-    .textContent = active;
+  document.getElementById(
+    "totalOrders"
+  ).textContent = total;
 
-  document.getElementById("partnersCount")
-    .textContent = data.partners.length;
+
+  document.getElementById(
+    "activeOrders"
+  ).textContent = active;
+
+
+  document.getElementById(
+    "partnersCount"
+  ).textContent =
+    data.partners.length;
 
 
   const box =
-    document.getElementById("adminOrders");
+    document.getElementById(
+      "adminOrders"
+    );
+
 
   if(!data.orders.length){
 
@@ -705,9 +1106,12 @@ function renderAdmin(){
       '<p class="muted">No orders yet.</p>';
 
     return;
+
   }
 
-  box.innerHTML = data.orders.map(o => `
+
+  box.innerHTML =
+    data.orders.map(o => `
 
     <div class="order">
 
@@ -778,22 +1182,32 @@ function renderAdmin(){
 function advanceOrder(id){
 
   const order =
-    data.orders.find(o => o.id === id);
+    data.orders.find(
+      o => o.id === id
+    );
+
 
   if(!order) return;
 
+
   const next = {
 
-    accepted: "picked_up",
+    accepted:
+      "picked_up",
 
-    picked_up: "on_the_way",
+    picked_up:
+      "on_the_way",
 
-    on_the_way: "delivered"
+    on_the_way:
+      "delivered"
 
   };
 
+
   order.status =
-    next[order.status] || order.status;
+    next[order.status]
+    || order.status;
+
 
   save();
 
@@ -806,8 +1220,12 @@ function advanceOrder(id){
 
 /* INITIAL LOAD */
 
+applySettings();
+
 renderCustomer();
+
 renderPartner();
+
 renderAdmin();
 
 </script>
