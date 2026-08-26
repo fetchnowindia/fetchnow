@@ -1,1234 +1,226 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FetchNow - All in One MVP</title>
-
-  <style>
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      color:#101828;
-      background:#fffaf0
-    }
-    header{
-      background:#fff;
-      border-bottom:1px solid #eee;
-      position:sticky;
-      top:0;
-      z-index:10
-    }
-    .wrap{
-      width:min(1100px,92%);
-      margin:auto
-    }
-    .nav{
-      min-height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:15px
-    }
-    .brand{
-      font-size:28px;
-      font-weight:800
-    }
-    .brand span,.y{color:#e9aa00}
-    .tabs{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap
-    }
-    button{
-      border:0;
-      border-radius:12px;
-      padding:13px 18px;
-      font-size:16px;
-      font-weight:700;
-      cursor:pointer
-    }
-    .tab{
-      background:#fff;
-      border:1px solid #ddd
-    }
-    .tab.active,.primary{
-      background:#f5b400;
-      color:#111
-    }
-    main{padding:45px 0}
-    .page{display:none}
-    .page.active{display:block}
-    h1{
-      font-size:48px;
-      line-height:1.05;
-      margin:0 0 12px
-    }
-    h2{margin-top:0}
-    .muted{color:#667085}
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:22px;
-      margin-top:30px
-    }
-    .card{
-      background:#fff;
-      border:1px solid #e4e4e4;
-      border-radius:20px;
-      padding:25px;
-      box-shadow:0 5px 20px rgba(0,0,0,.04)
-    }
-    label{
-      display:block;
-      font-weight:700;
-      margin:14px 0 7px
-    }
-    input,select{
-      width:100%;
-      padding:14px;
-      border:1px solid #d0d5dd;
-      border-radius:10px;
-      font-size:16px;
-      background:#fff
-    }
-    .primary{
-      width:100%;
-      margin-top:20px
-    }
-    .fare{
-      font-size:34px;
-      font-weight:800;
-      margin:15px 0
-    }
-    .status{
-      padding:12px;
-      border-radius:10px;
-      background:#fff7d6;
-      margin:12px 0;
-      font-weight:700
-    }
-    .success{
-      background:#e8f7ed
-    }
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap
-    }
-    .row button{flex:1}
-    .statgrid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:15px;
-      margin:25px 0
-    }
-    .stat{
-      background:#fff;
-      border:1px solid #ddd;
-      border-radius:16px;
-      padding:20px
-    }
-    .stat strong{
-      display:block;
-      font-size:30px
-    }
-    .order{
-      border:1px solid #ddd;
-      border-radius:14px;
-      padding:16px;
-      margin-bottom:12px;
-      background:#fff
-    }
-    .small{
-      font-size:14px;
-      color:#667085
-    }
-    .danger{
-      background:#eee;
-      margin-top:10px
-    }
-    .settings-card{
-      margin-top:25px
-    }
-    .settings-card input{
-      margin-bottom:5px
-    }
-    @media(max-width:750px){
-      .grid{grid-template-columns:1fr}
-      h1{font-size:40px}
-      .nav{align-items:flex-start;padding:12px 0}
-      .tabs{flex-wrap:wrap}
-      .tab{padding:10px 12px}
-      .statgrid{grid-template-columns:1fr}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FetchNow - All in One</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#101828;background:#fffaf0}
+header{background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+.wrap{width:min(1100px,92%);margin:auto}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:28px;font-weight:800}.brand span,.y{color:#e9aa00}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:12px;padding:13px 18px;font-size:16px;font-weight:700;cursor:pointer}
+.tab{background:#fff;border:1px solid #ddd}.tab.active,.primary{background:#f5b400;color:#111}
+main{padding:45px 0}.page{display:none}.page.active{display:block}
+h1{font-size:48px;line-height:1.05;margin:0 0 12px}h2{margin-top:0}
+.muted,.small{color:#667085}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px}
+.card{background:#fff;border:1px solid #e4e4e4;border-radius:20px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,.04)}
+label{display:block;font-weight:700;margin:14px 0 7px}
+input,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:10px;font-size:16px;background:#fff}
+.primary{width:100%;margin-top:20px}.fare{font-size:34px;font-weight:800;margin:15px 0}
+.status{padding:12px;border-radius:10px;background:#fff7d6;margin:12px 0;font-weight:700}
+.success{background:#e8f7ed}.row{display:flex;gap:10px;flex-wrap:wrap}.row button{flex:1}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:25px 0}
+.stat{background:#fff;border:1px solid #ddd;border-radius:16px;padding:20px}.stat strong{display:block;font-size:30px}
+.order{border:1px solid #ddd;border-radius:14px;padding:16px;margin-bottom:12px;background:#fff}
+.danger{background:#eee;margin-top:10px}.settings-card{margin-top:25px}
+@media(max-width:750px){.grid{grid-template-columns:1fr}h1{font-size:40px}.nav{align-items:flex-start;padding:12px 0}.tabs{flex-wrap:wrap}.tab{padding:10px 12px}.statgrid{grid-template-columns:1fr}}
+</style>
 </head>
-
 <body>
-
-<header>
-  <div class="wrap nav">
-
-    <div class="brand" id="brandName">
-      ⚡ Fetch<span>Now</span>
-    </div>
-
-    <div class="tabs">
-      <button class="tab active" onclick="showPage('customer',this)">Customer</button>
-      <button class="tab" onclick="showPage('partner',this)">Partner</button>
-      <button class="tab" onclick="showPage('admin',this)">Admin</button>
-    </div>
-
-  </div>
-</header>
+<header><div class="wrap nav">
+<div class="brand" id="brandName">⚡ Fetch<span>Now</span></div>
+<div class="tabs">
+<button class="tab active" onclick="showPage('customer',this)">Customer</button>
+<button class="tab" onclick="showPage('partner',this)">Partner</button>
+<button class="tab" onclick="showPage('admin',this)">Admin</button>
+</div></div></header>
 
 <main class="wrap">
 
-  <!-- CUSTOMER -->
-  <section id="customer" class="page active">
+<section id="customer" class="page active">
+<h1 id="mainHeading">Need it urgently?<br><span class="y">We'll fetch it.</span></h1>
+<p class="muted" id="tagline">Customer → Request → Fare → Partner → Live Status → Payment</p>
+<div class="grid">
+<div class="card"><h2>Request delivery</h2>
+<form id="customerForm">
+<label>Name</label><input id="cName" required placeholder="Your name">
+<label>Phone</label><input id="cPhone" required placeholder="Phone number">
+<label>Pickup</label><input id="pickup" required placeholder="Pickup location">
+<label>Drop</label><input id="drop" required placeholder="Drop location">
+<label>Item</label><input id="item" required placeholder="Charger, document, shoes...">
+<label>Speed</label><select id="speed"><option value="standard">Standard</option><option value="express">Express</option><option value="urgent">Urgent</option></select>
+<label>Distance from Nanded (km)</label>
+<input id="distance" type="number" min="1" max="30" value="5" required>
+<button class="primary" type="submit">Get Fare & Request</button>
+</form></div>
+<div class="card"><h2>Your order</h2><div id="customerOrder"><p class="muted">Create an order to see live status.</p></div></div>
+</div>
+</section>
 
-    <h1 id="mainHeading">
-      Need it urgently?<br>
-      <span class="y">We'll fetch it.</span>
-    </h1>
+<section id="partner" class="page">
+<h1>Partner <span class="y">Hub</span></h1>
+<p class="muted">Register as a delivery partner and accept available orders.</p>
+<div class="grid">
+<div class="card"><h2>Partner registration</h2>
+<form id="partnerForm">
+<label>Name</label><input id="pName" required placeholder="Partner name">
+<label>Phone</label><input id="pPhone" required placeholder="Phone number">
+<label>Vehicle</label><select id="vehicle"><option>Bike</option><option>Scooter</option><option>Car</option><option>Cycle</option></select>
+<button class="primary" type="submit">Register & Go Online</button>
+</form><div id="partnerInfo"></div></div>
+<div class="card"><h2>Available orders</h2><div id="partnerOrders"><p class="muted">Register first to see orders.</p></div></div>
+</div>
+</section>
 
-    <p class="muted" id="tagline">
-      Customer → Request → Fare → Partner → Live Status → Payment
-    </p>
+<section id="admin" class="page">
+<h1>Admin <span class="y">Dashboard</span></h1>
+<div class="statgrid">
+<div class="stat"><strong id="totalOrders">0</strong>Orders</div>
+<div class="stat"><strong id="activeOrders">0</strong>Active</div>
+<div class="stat"><strong id="partnersCount">0</strong>Partners</div>
+</div>
+<div class="card"><h2>All orders</h2><div id="adminOrders"></div></div>
 
-    <div class="grid">
+<div class="card settings-card">
+<h2>⚙️ Settings</h2>
+<p class="muted">Yahan se website ka basic content aur delivery pricing change kar sakte ho.</p>
+<label>Website Name</label><input id="settingBrand" placeholder="FetchNow">
+<label>Main Heading</label><input id="settingHeading" placeholder="Need it urgently?">
+<label>Highlight Heading</label><input id="settingHighlight" placeholder="We'll fetch it.">
+<label>Tagline</label><input id="settingTagline" placeholder="Customer → Request → Fare → Partner → Live Status → Payment">
+<label>Standard Base Fare (₹)</label><input id="standardBase" type="number" min="0">
+<label>Standard Per KM (₹)</label><input id="standardKm" type="number" min="0">
+<label>Express Base Fare (₹)</label><input id="expressBase" type="number" min="0">
+<label>Express Per KM (₹)</label><input id="expressKm" type="number" min="0">
+<label>Urgent Base Fare (₹)</label><input id="urgentBase" type="number" min="0">
+<label>Urgent Per KM (₹)</label><input id="urgentKm" type="number" min="0">
+<button class="primary" onclick="saveSettings()">💾 Save Settings</button>
+<button class="danger" onclick="resetSettings()">Reset Settings</button>
+<div id="settingsMessage"></div>
+</div>
+</section>
 
-      <div class="card">
-        <h2>Request delivery</h2>
-
-        <form id="customerForm">
-
-          <label>Name</label>
-          <input id="cName" required placeholder="Your name">
-
-          <label>Phone</label>
-          <input id="cPhone" required placeholder="Phone number">
-
-          <label>Pickup</label>
-          <input id="pickup" required placeholder="Pickup location">
-
-          <label>Drop</label>
-          <input id="drop" required placeholder="Drop location">
-
-          <label>Item</label>
-          <input id="item" required placeholder="Charger, document, shoes...">
-
-          <label>Speed</label>
-          <select id="speed">
-            <option value="standard">Standard</option>
-            <option value="express">Express</option>
-            <option value="urgent">Urgent</option>
-          </select>
-
-          <label>Distance (km)</label>
-          <input id="distance" type="number" min="1" value="5" required>
-
-          <button class="primary" type="submit">
-            Get Fare & Request
-          </button>
-
-        </form>
-      </div>
-
-      <div class="card">
-        <h2>Your order</h2>
-        <div id="customerOrder">
-          <p class="muted">Create an order to see live status.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- PARTNER -->
-  <section id="partner" class="page">
-
-    <h1>Partner <span class="y">Hub</span></h1>
-
-    <p class="muted">
-      Register as a delivery partner and accept available orders.
-    </p>
-
-    <div class="grid">
-
-      <div class="card">
-        <h2>Partner registration</h2>
-
-        <form id="partnerForm">
-
-          <label>Name</label>
-          <input id="pName" required placeholder="Partner name">
-
-          <label>Phone</label>
-          <input id="pPhone" required placeholder="Phone number">
-
-          <label>Vehicle</label>
-          <select id="vehicle">
-            <option>Bike</option>
-            <option>Scooter</option>
-            <option>Car</option>
-            <option>Cycle</option>
-          </select>
-
-          <button class="primary" type="submit">
-            Register & Go Online
-          </button>
-
-        </form>
-
-        <div id="partnerInfo"></div>
-      </div>
-
-      <div class="card">
-        <h2>Available orders</h2>
-        <div id="partnerOrders">
-          <p class="muted">Register first to see orders.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- ADMIN -->
-  <section id="admin" class="page">
-
-    <h1>Admin <span class="y">Dashboard</span></h1>
-
-    <div class="statgrid">
-
-      <div class="stat">
-        <strong id="totalOrders">0</strong>
-        Orders
-      </div>
-
-      <div class="stat">
-        <strong id="activeOrders">0</strong>
-        Active
-      </div>
-
-      <div class="stat">
-        <strong id="partnersCount">0</strong>
-        Partners
-      </div>
-
-    </div>
-
-    <div class="card">
-      <h2>All orders</h2>
-      <div id="adminOrders"></div>
-    </div>
-
-
-    <!-- SETTINGS -->
-    <div class="card settings-card">
-
-      <h2>⚙️ Settings</h2>
-
-      <p class="muted">
-        Yahan se website ka basic content aur delivery pricing change kar sakte ho.
-      </p>
-
-      <label>Website Name</label>
-      <input id="settingBrand" placeholder="FetchNow">
-
-      <label>Main Heading</label>
-      <input id="settingHeading" placeholder="Need it urgently?">
-
-      <label>Highlight Heading</label>
-      <input id="settingHighlight" placeholder="We'll fetch it.">
-
-      <label>Tagline</label>
-      <input id="settingTagline"
-        placeholder="Customer → Request → Fare → Partner → Live Status → Payment">
-
-      <label>Standard Base Fare (₹)</label>
-      <input id="standardBase" type="number" min="0">
-
-      <label>Standard Per KM (₹)</label>
-      <input id="standardKm" type="number" min="0">
-
-      <label>Express Base Fare (₹)</label>
-      <input id="expressBase" type="number" min="0">
-
-      <label>Express Per KM (₹)</label>
-      <input id="expressKm" type="number" min="0">
-
-      <label>Urgent Base Fare (₹)</label>
-      <input id="urgentBase" type="number" min="0">
-
-      <label>Urgent Per KM (₹)</label>
-      <input id="urgentKm" type="number" min="0">
-
-      <button class="primary" onclick="saveSettings()">
-        💾 Save Settings
-      </button>
-
-      <button class="danger" onclick="resetSettings()">
-        Reset Settings
-      </button>
-
-      <div id="settingsMessage"></div>
-
-    </div>
-
-  </section>
+<div class="card" style="margin-top:30px;">
+<h2>📜 Terms & Conditions</h2>
+<h3>Service Area</h3>
+<p>FetchNow service is currently available in Nanded and nearby areas, up to a maximum distance of 30 km.</p>
+<p>Orders beyond 30 km will not be accepted.</p>
+<h3>Future Expansion</h3>
+<p>As our customers and delivery partners (members) increase, FetchNow will gradually expand its service area.</p>
+<p>Our goal is to expand FetchNow beyond Nanded district and eventually provide our service in other districts of Maharashtra.</p>
+<p>Expansion will depend on customer demand, delivery-partner availability, and our operational capacity.</p>
+</div>
 
 </main>
 
-
 <script>
-
-const KEY = "fetchnow_mvp";
-
-const SETTINGS_KEY = "fetchnow_settings";
-
-
-/* DEFAULT SETTINGS */
-
-const defaultSettings = {
-
-  brand: "FetchNow",
-
-  heading: "Need it urgently?",
-
-  highlight: "We'll fetch it.",
-
-  tagline:
-    "Customer → Request → Fare → Partner → Live Status → Payment",
-
-  standardBase: 40,
-  standardKm: 12,
-
-  expressBase: 60,
-  expressKm: 15,
-
-  urgentBase: 90,
-  urgentKm: 20
-
+const KEY="fetchnow_mvp", SETTINGS_KEY="fetchnow_settings";
+const defaultSettings={
+brand:"FetchNow",heading:"Need it urgently?",highlight:"We'll fetch it.",
+tagline:"Customer → Request → Fare → Partner → Live Status → Payment",
+standardBase:40,standardKm:12,expressBase:60,expressKm:15,urgentBase:90,urgentKm:20
 };
+let settings=JSON.parse(localStorage.getItem(SETTINGS_KEY)||JSON.stringify(defaultSettings));
+let data=JSON.parse(localStorage.getItem(KEY)||'{"orders":[],"partners":[]}');
 
-
-let settings = JSON.parse(
-  localStorage.getItem(SETTINGS_KEY)
-  || JSON.stringify(defaultSettings)
-);
-
-
-let data = JSON.parse(
-  localStorage.getItem(KEY)
-  || '{"orders":[],"partners":[]}'
-);
-
-
-function save(){
-
-  localStorage.setItem(
-    KEY,
-    JSON.stringify(data)
-  );
-
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function saveSettingsData(){localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+if(id==="partner")renderPartner();
+if(id==="admin"){renderAdmin();loadSettingsForm()}
+if(id==="customer")renderCustomer();
 }
-
-
-function saveSettingsData(){
-
-  localStorage.setItem(
-    SETTINGS_KEY,
-    JSON.stringify(settings)
-  );
-
+function calculateFare(distance,speed){
+let base=settings.standardBase,perKm=settings.standardKm;
+if(speed==="express"){base=settings.expressBase;perKm=settings.expressKm}
+if(speed==="urgent"){base=settings.urgentBase;perKm=settings.urgentKm}
+return Math.round(base+distance*perKm);
 }
-
-
-function showPage(id, btn){
-
-  document.querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active"));
-
-  document.getElementById(id)
-    .classList.add("active");
-
-  document.querySelectorAll(".tab")
-    .forEach(b => b.classList.remove("active"));
-
-  if(btn) btn.classList.add("active");
-
-  if(id === "partner") renderPartner();
-
-  if(id === "admin"){
-    renderAdmin();
-    loadSettingsForm();
-  }
-
-  if(id === "customer") renderCustomer();
-
-}
-
-
-function calculateFare(distance, speed){
-
-  let base = settings.standardBase;
-
-  let perKm = settings.standardKm;
-
-
-  if(speed === "express"){
-
-    base = settings.expressBase;
-    perKm = settings.expressKm;
-
-  }
-
-
-  if(speed === "urgent"){
-
-    base = settings.urgentBase;
-    perKm = settings.urgentKm;
-
-  }
-
-
-  return Math.round(
-    base + distance * perKm
-  );
-
-}
-
-
 function statusText(status){
-
-  const map = {
-
-    requested:
-      "🟡 Searching for partner",
-
-    accepted:
-      "🔵 Partner accepted",
-
-    picked_up:
-      "📦 Item picked up",
-
-    on_the_way:
-      "🚴 On the way",
-
-    delivered:
-      "🟢 Delivered",
-
-    paid:
-      "💳 Payment completed"
-
-  };
-
-  return map[status] || status;
-
+const map={requested:"🟡 Searching for partner",accepted:"🔵 Partner accepted",picked_up:"📦 Item picked up",on_the_way:"🚴 On the way",delivered:"🟢 Delivered",paid:"💳 Payment completed"};
+return map[status]||status;
 }
-
-
-/* APPLY WEBSITE SETTINGS */
-
 function applySettings(){
-
-  document.title =
-    settings.brand + " - All in One MVP";
-
-
-  document.getElementById("brandName").innerHTML =
-    "⚡ " +
-    settings.brand;
-
-
-  document.getElementById("mainHeading").innerHTML = `
-
-    ${settings.heading}<br>
-
-    <span class="y">
-      ${settings.highlight}
-    </span>
-
-  `;
-
-
-  document.getElementById("tagline")
-    .textContent =
-    settings.tagline;
-
+document.title=settings.brand+" - All in One";
+document.getElementById("brandName").innerHTML="⚡ "+settings.brand;
+document.getElementById("mainHeading").innerHTML=`${settings.heading}<br><span class="y">${settings.highlight}</span>`;
+document.getElementById("tagline").textContent=settings.tagline;
 }
-
-
-/* SETTINGS FORM */
-
 function loadSettingsForm(){
-
-  document.getElementById("settingBrand").value =
-    settings.brand;
-
-  document.getElementById("settingHeading").value =
-    settings.heading;
-
-  document.getElementById("settingHighlight").value =
-    settings.highlight;
-
-  document.getElementById("settingTagline").value =
-    settings.tagline;
-
-  document.getElementById("standardBase").value =
-    settings.standardBase;
-
-  document.getElementById("standardKm").value =
-    settings.standardKm;
-
-  document.getElementById("expressBase").value =
-    settings.expressBase;
-
-  document.getElementById("expressKm").value =
-    settings.expressKm;
-
-  document.getElementById("urgentBase").value =
-    settings.urgentBase;
-
-  document.getElementById("urgentKm").value =
-    settings.urgentKm;
-
+settingBrand.value=settings.brand;settingHeading.value=settings.heading;settingHighlight.value=settings.highlight;settingTagline.value=settings.tagline;
+standardBase.value=settings.standardBase;standardKm.value=settings.standardKm;
+expressBase.value=settings.expressBase;expressKm.value=settings.expressKm;
+urgentBase.value=settings.urgentBase;urgentKm.value=settings.urgentKm;
 }
-
-
 function saveSettings(){
-
-  settings.brand =
-    document.getElementById("settingBrand").value
-    || "FetchNow";
-
-
-  settings.heading =
-    document.getElementById("settingHeading").value
-    || "Need it urgently?";
-
-
-  settings.highlight =
-    document.getElementById("settingHighlight").value
-    || "We'll fetch it.";
-
-
-  settings.tagline =
-    document.getElementById("settingTagline").value
-    || defaultSettings.tagline;
-
-
-  settings.standardBase =
-    Number(document.getElementById("standardBase").value)
-    || 0;
-
-
-  settings.standardKm =
-    Number(document.getElementById("standardKm").value)
-    || 0;
-
-
-  settings.expressBase =
-    Number(document.getElementById("expressBase").value)
-    || 0;
-
-
-  settings.expressKm =
-    Number(document.getElementById("expressKm").value)
-    || 0;
-
-
-  settings.urgentBase =
-    Number(document.getElementById("urgentBase").value)
-    || 0;
-
-
-  settings.urgentKm =
-    Number(document.getElementById("urgentKm").value)
-    || 0;
-
-
-  saveSettingsData();
-
-  applySettings();
-
-  document.getElementById("settingsMessage").innerHTML = `
-
-    <div class="status success">
-      ✅ Settings saved successfully!
-    </div>
-
-  `;
-
+settings.brand=settingBrand.value||"FetchNow";settings.heading=settingHeading.value||"Need it urgently?";
+settings.highlight=settingHighlight.value||"We'll fetch it.";settings.tagline=settingTagline.value||defaultSettings.tagline;
+settings.standardBase=Number(standardBase.value)||0;settings.standardKm=Number(standardKm.value)||0;
+settings.expressBase=Number(expressBase.value)||0;settings.expressKm=Number(expressKm.value)||0;
+settings.urgentBase=Number(urgentBase.value)||0;settings.urgentKm=Number(urgentKm.value)||0;
+saveSettingsData();applySettings();settingsMessage.innerHTML='<div class="status success">✅ Settings saved successfully!</div>';
 }
+function resetSettings(){settings={...defaultSettings};saveSettingsData();loadSettingsForm();applySettings();settingsMessage.innerHTML='<div class="status">Settings reset to default.</div>'}
 
-
-function resetSettings(){
-
-  settings = {
-    ...defaultSettings
-  };
-
-  saveSettingsData();
-
-  loadSettingsForm();
-
-  applySettings();
-
-  document.getElementById("settingsMessage").innerHTML = `
-
-    <div class="status">
-      Settings reset to default.
-    </div>
-
-  `;
-
-}
-
-
-/* CUSTOMER */
-
-document.getElementById("customerForm")
-.addEventListener("submit", function(e){
-
-  e.preventDefault();
-
-
-  const distance =
-    Number(
-      document.getElementById("distance").value
-    );
-
-
-  const speed =
-    document.getElementById("speed").value;
-
-
-  const fare =
-    calculateFare(distance, speed);
-
-
-  const order = {
-
-    id:
-      "FN" + Date.now(),
-
-    name:
-      document.getElementById("cName").value,
-
-    phone:
-      document.getElementById("cPhone").value,
-
-    pickup:
-      document.getElementById("pickup").value,
-
-    drop:
-      document.getElementById("drop").value,
-
-    item:
-      document.getElementById("item").value,
-
-    distance,
-
-    speed,
-
-    fare,
-
-    status:
-      "requested",
-
-    partnerId:
-      null,
-
-    createdAt:
-      new Date().toLocaleString()
-
-  };
-
-
-  data.orders.unshift(order);
-
-  save();
-
-  renderCustomer();
-
-
-  alert(
-    "Request created! Fare: ₹" + fare
-  );
-
+customerForm.addEventListener("submit",function(e){
+e.preventDefault();
+const distance=Number(document.getElementById("distance").value);
+if(distance>30){alert("Sorry! FetchNow service is currently available only in Nanded and up to 30 km. Orders beyond 30 km cannot be accepted.");return}
+if(distance<=0||!Number.isFinite(distance)){alert("Please enter a valid distance.");return}
+const speed=document.getElementById("speed").value,fare=calculateFare(distance,speed);
+const order={id:"FN"+Date.now(),name:cName.value,phone:cPhone.value,pickup:pickup.value,drop:drop.value,item:item.value,distance,speed,fare,status:"requested",partnerId:null,createdAt:new Date().toLocaleString()};
+data.orders.unshift(order);save();renderCustomer();alert("Request created! Fare: ₹"+fare);
 });
-
-
 function renderCustomer(){
-
-  const box =
-    document.getElementById("customerOrder");
-
-
-  if(!data.orders.length){
-
-    box.innerHTML =
-      '<p class="muted">Create an order to see live status.</p>';
-
-    return;
-
-  }
-
-
-  const o =
-    data.orders[0];
-
-
-  box.innerHTML = `
-
-    <div class="status">
-      ${statusText(o.status)}
-    </div>
-
-    <p>
-      <b>Order ID:</b>
-      ${o.id}
-    </p>
-
-    <p>
-      <b>${o.pickup}</b>
-      →
-      <b>${o.drop}</b>
-    </p>
-
-    <p>
-      <b>Item:</b>
-      ${o.item}
-    </p>
-
-    <p>
-      <b>Distance:</b>
-      ${o.distance} km
-    </p>
-
-    <div class="fare">
-      ₹${o.fare}
-    </div>
-
-    <p class="small">
-      Created: ${o.createdAt}
-    </p>
-
-    ${
-      o.status === "delivered"
-      ? `
-        <button
-          class="primary"
-          onclick="payOrder('${o.id}')">
-          Pay ₹${o.fare}
-        </button>
-      `
-      : ""
-    }
-
-    ${
-      o.status === "paid"
-      ? `
-        <div class="status success">
-          ✅ Payment successful
-        </div>
-      `
-      : ""
-    }
-
-  `;
-
+const box=customerOrder;if(!data.orders.length){box.innerHTML='<p class="muted">Create an order to see live status.</p>';return}
+const o=data.orders[0];
+box.innerHTML=`<div class="status">${statusText(o.status)}</div><p><b>Order ID:</b> ${o.id}</p><p><b>${o.pickup}</b> → <b>${o.drop}</b></p><p><b>Item:</b> ${o.item}</p><p><b>Distance:</b> ${o.distance} km</p><div class="fare">₹${o.fare}</div><p class="small">Created: ${o.createdAt}</p>
+${o.status==="delivered"?`<button class="primary" onclick="payOrder('${o.id}')">Pay ₹${o.fare}</button>`:""}
+${o.status==="paid"?'<div class="status success">✅ Payment successful</div>':""}`;
 }
+function payOrder(id){const order=data.orders.find(o=>o.id===id);if(!order)return;order.status="paid";save();renderCustomer();alert("Payment successful! 💳")}
 
-
-function payOrder(id){
-
-  const order =
-    data.orders.find(
-      o => o.id === id
-    );
-
-
-  if(!order) return;
-
-
-  order.status =
-    "paid";
-
-
-  save();
-
-  renderCustomer();
-
-
-  alert(
-    "Payment successful! 💳"
-  );
-
-}
-
-
-/* PARTNER */
-
-document.getElementById("partnerForm")
-.addEventListener("submit", function(e){
-
-  e.preventDefault();
-
-
-  const partner = {
-
-    id:
-      "P" + Date.now(),
-
-    name:
-      document.getElementById("pName").value,
-
-    phone:
-      document.getElementById("pPhone").value,
-
-    vehicle:
-      document.getElementById("vehicle").value,
-
-    online:
-      true
-
-  };
-
-
-  data.partners.push(partner);
-
-  save();
-
-
-  localStorage.setItem(
-    "fetchnow_partner",
-    partner.id
-  );
-
-
-  document.getElementById("partnerInfo")
-    .innerHTML = `
-
-    <div class="status success">
-      🟢 You are ONLINE
-    </div>
-
-    <p>
-      Welcome <b>${partner.name}</b>
-    </p>
-
-    <p>
-      Vehicle: ${partner.vehicle}
-    </p>
-
-  `;
-
-
-  renderPartner();
-
+partnerForm.addEventListener("submit",function(e){
+e.preventDefault();
+const partner={id:"P"+Date.now(),name:pName.value,phone:pPhone.value,vehicle:vehicle.value,online:true};
+data.partners.push(partner);save();localStorage.setItem("fetchnow_partner",partner.id);
+partnerInfo.innerHTML=`<div class="status success">🟢 You are ONLINE</div><p>Welcome <b>${partner.name}</b></p><p>Vehicle: ${partner.vehicle}</p>`;renderPartner();
 });
-
-
 function renderPartner(){
-
-  const box =
-    document.getElementById("partnerOrders");
-
-
-  const partnerId =
-    localStorage.getItem(
-      "fetchnow_partner"
-    );
-
-
-  if(!partnerId){
-
-    box.innerHTML =
-      '<p class="muted">Register first to see orders.</p>';
-
-    return;
-
-  }
-
-
-  const open =
-    data.orders.filter(
-      o => o.status === "requested"
-    );
-
-
-  if(!open.length){
-
-    box.innerHTML =
-      '<p class="muted">No new orders right now.</p>';
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    open.map(o => `
-
-    <div class="order">
-
-      <b>Order ${o.id}</b>
-
-      <p>
-        ${o.pickup}
-        →
-        ${o.drop}
-      </p>
-
-      <p>
-        ${o.item} · ${o.distance} km
-      </p>
-
-      <p>
-        <b>Fare: ₹${o.fare}</b>
-      </p>
-
-      <button
-        class="primary"
-        onclick="acceptOrder('${o.id}')">
-        Accept Order
-      </button>
-
-    </div>
-
-  `).join("");
-
+const box=partnerOrders,partnerId=localStorage.getItem("fetchnow_partner");
+if(!partnerId){box.innerHTML='<p class="muted">Register first to see orders.</p>';return}
+const open=data.orders.filter(o=>o.status==="requested");
+if(!open.length){box.innerHTML='<p class="muted">No new orders right now.</p>';return}
+box.innerHTML=open.map(o=>`<div class="order"><b>Order ${o.id}</b><p>${o.pickup} → ${o.drop}</p><p>${o.item} · ${o.distance} km</p><p><b>Fare: ₹${o.fare}</b></p><button class="primary" onclick="acceptOrder('${o.id}')">Accept Order</button></div>`).join("");
 }
-
-
 function acceptOrder(id){
-
-  const partnerId =
-    localStorage.getItem(
-      "fetchnow_partner"
-    );
-
-
-  if(!partnerId){
-
-    alert(
-      "Register as partner first."
-    );
-
-    return;
-
-  }
-
-
-  const order =
-    data.orders.find(
-      o => o.id === id
-    );
-
-
-  if(!order) return;
-
-
-  order.status =
-    "accepted";
-
-
-  order.partnerId =
-    partnerId;
-
-
-  save();
-
-  renderPartner();
-
-
-  alert(
-    "Order accepted! 🚴"
-  );
-
-
-  showPage(
-    "partner",
-    document.querySelectorAll(".tab")[1]
-  );
-
+const partnerId=localStorage.getItem("fetchnow_partner");if(!partnerId){alert("Register as partner first.");return}
+const order=data.orders.find(o=>o.id===id);if(!order)return;
+order.status="accepted";order.partnerId=partnerId;save();renderPartner();alert("Order accepted! 🚴");showPage("partner",document.querySelectorAll(".tab")[1]);
 }
-
-
-/* ADMIN */
-
 function renderAdmin(){
-
-  const total =
-    data.orders.length;
-
-
-  const active =
-    data.orders.filter(
-      o =>
-        !["delivered","paid"]
-        .includes(o.status)
-    ).length;
-
-
-  document.getElementById(
-    "totalOrders"
-  ).textContent = total;
-
-
-  document.getElementById(
-    "activeOrders"
-  ).textContent = active;
-
-
-  document.getElementById(
-    "partnersCount"
-  ).textContent =
-    data.partners.length;
-
-
-  const box =
-    document.getElementById(
-      "adminOrders"
-    );
-
-
-  if(!data.orders.length){
-
-    box.innerHTML =
-      '<p class="muted">No orders yet.</p>';
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    data.orders.map(o => `
-
-    <div class="order">
-
-      <b>${o.id}</b>
-
-      <p>
-        ${o.pickup}
-        →
-        ${o.drop}
-      </p>
-
-      <p>
-        Customer: ${o.name}
-      </p>
-
-      <p>
-        Item: ${o.item}
-      </p>
-
-      <p>
-        Fare: ₹${o.fare}
-      </p>
-
-      <div class="status">
-        ${statusText(o.status)}
-      </div>
-
-      ${
-        o.status === "accepted"
-        ? `
-          <button
-            onclick="advanceOrder('${o.id}')">
-            Mark Picked Up
-          </button>
-        `
-        : ""
-      }
-
-      ${
-        o.status === "picked_up"
-        ? `
-          <button
-            onclick="advanceOrder('${o.id}')">
-            Mark On The Way
-          </button>
-        `
-        : ""
-      }
-
-      ${
-        o.status === "on_the_way"
-        ? `
-          <button
-            onclick="advanceOrder('${o.id}')">
-            Mark Delivered
-          </button>
-        `
-        : ""
-      }
-
-    </div>
-
-  `).join("");
-
+const total=data.orders.length,active=data.orders.filter(o=>!["delivered","paid"].includes(o.status)).length;
+totalOrders.textContent=total;activeOrders.textContent=active;partnersCount.textContent=data.partners.length;
+if(!data.orders.length){adminOrders.innerHTML='<p class="muted">No orders yet.</p>';return}
+adminOrders.innerHTML=data.orders.map(o=>`<div class="order"><b>${o.id}</b><p>${o.pickup} → ${o.drop}</p><p>Customer: ${o.name}</p><p>Item: ${o.item}</p><p>Fare: ₹${o.fare}</p><div class="status">${statusText(o.status)}</div>
+${o.status==="accepted"?`<button onclick="advanceOrder('${o.id}')">Mark Picked Up</button>`:""}
+${o.status==="picked_up"?`<button onclick="advanceOrder('${o.id}')">Mark On The Way</button>`:""}
+${o.status==="on_the_way"?`<button onclick="advanceOrder('${o.id}')">Mark Delivered</button>`:""}</div>`).join("");
 }
-
-
 function advanceOrder(id){
-
-  const order =
-    data.orders.find(
-      o => o.id === id
-    );
-
-
-  if(!order) return;
-
-
-  const next = {
-
-    accepted:
-      "picked_up",
-
-    picked_up:
-      "on_the_way",
-
-    on_the_way:
-      "delivered"
-
-  };
-
-
-  order.status =
-    next[order.status]
-    || order.status;
-
-
-  save();
-
-  renderAdmin();
-
-  renderCustomer();
-
+const order=data.orders.find(o=>o.id===id);if(!order)return;
+const next={accepted:"picked_up",picked_up:"on_the_way",on_the_way:"delivered"};
+order.status=next[order.status]||order.status;save();renderAdmin();renderCustomer();
 }
-
-
-/* INITIAL LOAD */
-
-applySettings();
-
-renderCustomer();
-
-renderPartner();
-
-renderAdmin();
-
+applySettings();renderCustomer();renderPartner();renderAdmin();
 </script>
-
 </body>
 </html>
