@@ -7,7 +7,7 @@
 <main class="wrap">
 <section id="customer" class="page active"><h1>Need it urgently?<br><span class="y">We'll fetch it.</span></h1><p class="muted">Customer app: request → fare → partner → live status → payment.</p>
 <div class="grid"><div class="card"><h2>Request delivery</h2><form id="cf"><label>Name</label><input id="cn" required><label>Phone</label><input id="cp" required><label>Pickup</label><input id="cpi" required><label>Drop</label><input id="cd" required><label>Item</label><input id="ci" required placeholder="Charger, document, shoes..."><label>Speed</label><select id="cs"><option value="standard">Standard</option><option value="fast">Fast</option><option value="urgent">Urgent</option></select><label>Distance (km)</label><input id="ck" type="number" value="5" min="1"><button class="btn">Create order</button></form><div class="result" id="cr"></div></div>
-<div class="card"><h2>Your order</h2><div id="co"><p class="muted">Create an order to see live status.</p></div><div class="map">📍</div><div class="note">Maps/GPS integration point: connect Google Maps or Mapbox here for real-time rider location.</div></div></div></section>
+<div class="card"><h2>Your order</h2><div id="co"><p class="muted">Create an order to see live status.</p></div><div class="map">📍</div><button class="btn small" id="locbtn" type="button">📍 Share my live location</button></div></div></section>
 
 <section id="partner" class="page"><h1>Partner <span class="y">Hub</span></h1><p class="muted">Register → go online → accept a request → update delivery status.</p><div class="grid"><div class="card"><h2>Partner registration</h2><form id="pf"><label>Name</label><input id="pn" required><label>Phone</label><input id="pp" required><label>Email ID <span class="muted">(required & verified)</span></label><input id="pe" type="email" required placeholder="you@example.com"><label>Vehicle</label><select id="pv"><option>Bike</option><option>Scooter</option><option>Car</option></select><label>Driving Licence Number</label><input id="pl" required placeholder="Licence number"><label>Licence Expiry Date</label><input id="px" type="date" required><button class="btn">Apply & Verify Email</button></form><div class="result" id="pr"></div><div class="note">Email verification is compulsory. After verification, your application goes to FetchNow Admin for licence and profile review. Partner access is activated only after approval.</div></div><div class="card"><h2>Available orders</h2><div id="po">Loading...</div></div></div></section>
 
@@ -15,7 +15,10 @@
 </main>
 
 <script>
-/* ===== DEMO BACKEND (browser localStorage) — real server aalyavar he kaadhun taka ===== */
+/* ===== SETTINGS ===== */
+const UPI_ID="vaidyashantanu6@okicici";
+
+/* ===== DEMO BACKEND (browser localStorage) ===== */
 (function(){
 const K="fetchnow_db";
 const load=()=>{try{return JSON.parse(localStorage.getItem(K))||{o:[],p:[],a:[]}}catch(e){return {o:[],p:[],a:[]}}};
@@ -55,6 +58,7 @@ window.fetch=async(url,opt={})=>{
  return res({error:"Unknown route"},404);
 };
 })();
+
 /* ===== APP ===== */
 let current=null, partnerId=null;
 const $=x=>document.getElementById(x);
@@ -62,7 +66,26 @@ function show(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.
 $("cf").onsubmit=async e=>{e.preventDefault();let b={name:$("cn").value,phone:$("cp").value,pickup:$("cpi").value,dropoff:$("cd").value,item:$("ci").value,speed:$("cs").value,distance_km:+$("ck").value};let r=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}),d=await r.json();$("cr").textContent=r.ok?`Order ${d.id} created • Fare ₹${d.fare}`:d.error;if(r.ok){current=d.id;renderCustomer(d.id)}};
 async function getOrders(){return (await fetch("/api/orders")).json()}
 async function renderCustomer(id){let r=await fetch("/api/orders/"+id),o=await r.json();if(!r.ok)return;$("co").innerHTML=`<p><b>${o.id}</b> <span class="pill">${o.status}</span></p><p>${o.item}<br>${o.pickup} → ${o.dropoff}<br><b>Fare: ₹${o.fare}</b> · Payment: ${o.payment_status}</p><div class="actions">${o.payment_status!=="paid"?`<button class="btn small" onclick="pay('${o.id}')">Pay ₹${o.fare}</button>`:"<span class='pill'>Paid ✓</span>"}</div>`}
-async function pay(id){let r=await fetch("/api/orders/"+id+"/pay",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});if(r.ok)renderCustomer(id)}
+
+/* ===== UPI PAYMENT + QR ===== */
+async function pay(id){
+ let o=await (await fetch("/api/orders/"+id)).json();
+ await renderCustomer(id);
+ const link=`upi://pay?pa=${UPI_ID}&pn=FetchNow&am=${o.fare}&cu=INR&tn=${o.id}`;
+ $("co").innerHTML+=`<div class="note"><b>Pay ₹${o.fare}</b><a class="btn small" style="display:block;text-align:center;text-decoration:none;color:#000" href="${link}">Pay with UPI app</a><p style="text-align:center"><img width="180" height="180" alt="UPI QR" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(link)}"><br>Dusrya phone cha UPI app ne scan kara</p><button class="btn small" onclick="paid('${id}')">I have paid ✓</button></div>`;
+}
+async function paid(id){await fetch("/api/orders/"+id+"/pay",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});renderCustomer(id)}
+
+/* ===== GOOGLE MAP LIVE LOCATION ===== */
+const mp=document.querySelector(".map");
+function setMap(q){mp.style.fontSize="0";mp.innerHTML=`<iframe width="100%" height="100%" style="border:0;border-radius:16px" src="https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=16&output=embed"></iframe>`}
+let wid,lastT=0;
+$("locbtn").onclick=()=>{
+ if(!navigator.geolocation)return alert("GPS supported nahi");
+ if(wid)navigator.geolocation.clearWatch(wid);
+ wid=navigator.geolocation.watchPosition(p=>{if(Date.now()-lastT<10000)return;lastT=Date.now();setMap(p.coords.latitude+","+p.coords.longitude)},()=>alert("Location permission dya"),{enableHighAccuracy:true});
+};
+
 $("pf").onsubmit=async e=>{e.preventDefault();let b={name:$("pn").value,phone:$("pp").value,email:$("pe").value,vehicle:$("pv").value,licence_number:$("pl").value,licence_expiry:$("px").value};let r=await fetch("/api/partners/apply",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}),d=await r.json();$("pr").textContent=r.ok?d.message:d.error;if(r.ok)e.target.reset()};
 async function loadPartner(){let os=await getOrders();let open=os.filter(x=>x.status==="requested");$("po").innerHTML=open.length?open.map(o=>`<div class="card" style="margin:8px 0"><b>${o.id}</b> · ₹${o.fare}<br>${o.item}<br><span class="muted">${o.pickup} → ${o.dropoff}</span><button class="btn small" onclick="acceptOrder('${o.id}')">Accept order</button></div>`).join(""):"<p class='muted'>No open requests. Create an order in the Customer tab.</p>"}
 async function acceptOrder(id){if(!partnerId){let ps=await fetch("/api/partners").then(r=>r.json());if(ps.length)partnerId=ps[0].id}if(!partnerId){alert("Register a partner and get it approved in Admin first.");return}let r=await fetch("/api/orders/"+id+"/accept",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({partner_id:partnerId})});let d=await r.json();if(r.ok){alert("Order accepted.");current=id;loadPartner()}else alert(d.error)}
