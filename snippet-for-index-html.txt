@@ -1,0 +1,10 @@
+=== <head> च्या आत टाका ===
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f59e0b">
+
+=== </body> च्या आधी टाका ===
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/fetchnow/sw.js', {scope: '/fetchnow/'});
+}
+</script>
