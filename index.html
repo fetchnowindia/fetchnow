@@ -31,4 +31,13 @@ async function rejectApp(id){if(!confirm("Reject this application?"))return;let 
 function nextStatus(s){return {requested:"accepted",accepted:"picked_up",picked_up:"on_the_way",on_the_way:"delivered"}[s]||"delivered"}
 async function demoSeed(){let b={name:"Demo User",phone:"9999999999",pickup:"College Gate",dropoff:"Hostel",item:"Phone charger",speed:"fast",distance_km:4};await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});loadAdmin()}
 loadAdmin();
-</script></body></html>
+</script></body>  === <head> à¤šà¥à¤¯à¤¾ à¤†à¤¤ à¤Ÿà¤¾à¤•à¤¾ ===
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f59e0b">
+
+=== </body> à¤šà¥à¤¯à¤¾ à¤†à¤§à¥€ à¤Ÿà¤¾à¤•à¤¾ ===
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/fetchnow/sw.js', {scope: '/fetchnow/'});
+}
+</script>html>
