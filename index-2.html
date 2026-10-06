@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FetchNow – Forgot Something? We'll Deliver It</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fffdf6;--card:#fff;--tx:#14161f;--mut:#5f6472;--pri:#f7b500;--dk:#14161f;--soft:#fff3c4;--bd:#ece6d2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101117;--card:#1a1c25;--tx:#f4f4f5;--mut:#a0a4b0;--soft:#2a2614;--bd:#2b2e3a}}
+:root[data-theme="dark"]{--bg:#101117;--card:#1a1c25;--tx:#f4f4f5;--mut:#a0a4b0;--soft:#2a2614;--bd:#2b2e3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5}
+.w{max-width:1000px;margin:0 auto;padding:0 18px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--bd);z-index:5}
+nav .w{display:flex;justify-content:space-between;align-items:center;height:56px}
+.logo{font-weight:800;font-size:22px}.logo span{color:var(--pri)}
+.btn{background:var(--pri);color:#14161f;border:0;border-radius:10px;padding:12px 20px;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.o{background:none;border:1.5px solid var(--tx);color:var(--tx)}
+.hero{padding:36px 0 24px}
+.tag{display:inline-block;background:var(--soft);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:.5px}
+h1{font-size:clamp(34px,8vw,56px);line-height:1.1;margin:14px 0}
+h1 em{color:var(--pri);font-style:normal}
+.hero p{color:var(--mut);max-width:480px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.emo{font-size:90px;text-align:center;margin-top:10px}
+.book{background:var(--dk);color:#fff;border-radius:18px;padding:22px;margin:20px 0}
+.book h2{margin:0 0 4px;color:var(--pri)}
+.book p{margin:0 0 14px;color:#cfd2dc;font-size:14px}
+.f{display:grid;gap:10px}
+@media(min-width:700px){.f{grid-template-columns:1fr 1fr}.f .full{grid-column:1/-1}}
+input,select{width:100%;padding:12px;border-radius:10px;border:0;font-size:15px;background:#fff;color:#14161f;font-family:inherit}
+label{font-size:12px;color:#cfd2dc;display:block;margin-bottom:3px}
+input[type=range]{padding:0;accent-color:var(--pri);background:none}
+.est{background:#232636;border-radius:12px;padding:14px;margin-top:12px;font-size:14px}
+.est div{display:flex;justify-content:space-between;padding:3px 0}
+.est .t{font-size:20px;font-weight:800;color:var(--pri);border-top:1px solid #3a3e52;margin-top:6px;padding-top:8px}
+h2.s{text-align:center;margin:36px 0 18px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;text-align:center}
+.c .i{font-size:32px}.c b{display:block;margin:4px 0}.c small{color:var(--mut)}
+.n{background:var(--pri);color:#14161f;width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font-weight:800;font-size:13px}
+.band{background:var(--soft);padding:8px 0;margin-top:30px}
+.part{background:var(--pri);color:#14161f;border-radius:18px;padding:24px;margin:30px 0;display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.part h3{margin:0}
+footer{background:var(--dk);color:#cfd2dc;padding:26px 0 30px;font-size:14px}
+footer b{color:#fff}
+
+.sh{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:20}
+.bx{background:var(--bg);width:100%;max-width:560px;margin:0 auto;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.opt{display:flex;gap:10px;align-items:center;border:1.5px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0;cursor:pointer;background:var(--card)}
+.opt.on{border-color:var(--pri);background:var(--soft)}
+.opt small{color:var(--mut);display:block}
+.map{background:var(--soft);border-radius:14px;width:100%;display:block}
+.st{display:flex;justify-content:space-between;font-size:11px;text-align:center;margin:12px 0}
+.st div{flex:1;opacity:.35}.st .d{opacity:1;font-weight:700;color:#0a8f3c}
+.rd{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.dm{font-size:11px;color:var(--mut);text-align:center;margin-top:8px}
+.pol{max-width:1000px;margin:0 auto;padding:10px 18px}
+.pol h2{margin:28px 0 8px;scroll-margin-top:70px}.pol p,.pol li{color:var(--mut);font-size:14px}
+.fl{margin-top:10px}.fl a{color:var(--pri);margin-right:14px;text-decoration:none}
+</style></head><body>
+<nav><div class="w"><div class="logo">Fetch<span>Now</span></div><a class="btn" href="#book">Request Delivery</a></div></nav>
+
+<div class="w">
+<section class="hero">
+<span class="tag">📍 NOW IN NANDED • FAST • SAFE</span>
+<h1>Forgot Something?<br>We'll <em>Deliver</em> It.</h1>
+<p>Keys, charger, documents, medicines. We pick it up from your home and deliver it to you, anywhere in Nanded.</p>
+<div class="cta"><a class="btn" href="#book">Request a Delivery</a><a class="btn o" href="#partner">Become a Partner</a></div>
+<div class="emo">🛵💨</div>
+</section>
+
+<section class="book" id="book">
+<h2>Book a Delivery</h2><p>Fast, simple and hassle-free</p>
+<div class="f">
+<div><label>Pickup location</label><input id="pu" placeholder="e.g. Home, Shivaji Nagar, Nanded"></div>
+<div><label>Drop location</label><input id="dr" placeholder="e.g. Office, Vazirabad, Nanded"></div>
+<div><label>What do you need?</label><input id="it" placeholder="e.g. Laptop charger"></div>
+<div><label>Item type</label><select id="ty"><option>Keys & Wallets</option><option>Electronics</option><option>Documents</option><option>Medicines</option><option>Clothes & Shoes</option><option>Other</option></select></div>
+<div><label>Your name</label><input id="nm" placeholder="Your name"></div>
+<div><label>Mobile</label><input id="ph" type="tel" placeholder="Mobile number"></div>
+<div class="full"><label>Approx distance: <b id="kv">5</b> km</label><input type="range" id="km" min="1" max="30" value="5"></div>
+</div>
+<div class="est">
+<div><span>First 4 km</span><span>₹30</span></div>
+<div><span>Extra distance (<span id="k2">1</span> km × ₹10)</span><span id="fd">₹10</span></div>
+<div class="t"><span>Estimated total</span><span id="tt">₹40</span></div>
+</div>
+<div id="er" style="color:#ff8a80;font-size:14px;margin-top:10px"></div>
+<button class="btn" style="width:100%;margin-top:12px" onclick="go()">Book Now</button>
+</section>
+
+<h2 class="s">How It Works</h2>
+<div class="g">
+<div class="c"><span class="n">1</span><div class="i">📍</div><b>Enter Locations</b><small>Pickup and drop address</small></div>
+<div class="c"><span class="n">2</span><div class="i">📦</div><b>Describe Item</b><small>Tell us what you need</small></div>
+<div class="c"><span class="n">3</span><div class="i">🛵</div><b>We Pick It Up</b><small>A partner collects it</small></div>
+<div class="c"><span class="n">4</span><div class="i">🏠</div><b>We Deliver It</b><small>Safely and on time</small></div>
+</div>
+</div>
+
+<div class="band"><div class="w"><div class="g" style="padding:18px 0">
+<div class="c"><div class="i">🛡️</div><b>Safe & Secure</b><small>Verified partners</small></div>
+<div class="c"><div class="i">⚡</div><b>Super Fast</b><small>Quick pickups</small></div>
+<div class="c"><div class="i">₹</div><b>Affordable</b><small>No hidden charges</small></div>
+<div class="c"><div class="i">🎧</div><b>24/7 Support</b><small>Always here</small></div>
+</div></div></div>
+
+<div class="w">
+<h2 class="s">What Can We Deliver?</h2>
+<div class="g">
+<div class="c"><div class="i">🔑</div>Keys & Wallets</div><div class="c"><div class="i">💻</div>Electronics</div>
+<div class="c"><div class="i">📄</div>Documents</div><div class="c"><div class="i">💊</div>Medicines</div>
+<div class="c"><div class="i">👕</div>Clothes & Shoes</div><div class="c"><div class="i">🛍️</div>And Many More</div>
+</div>
+
+<section class="part" id="partner">
+<div><h3>Earn with FetchNow</h3><div>Ride, deliver and earn per order. Join today.</div></div>
+<a class="btn" style="background:#14161f;color:#fff" href="#" onclick="partner();return false">Join as Partner</a>
+</section>
+</div>
+
+<div class="pol">
+<h2 id="contact">Contact Us</h2>
+<p>FetchNow, Nanded, Maharashtra, India<br>Phone / WhatsApp: +91 95291 99382<br>Email: vaidyashantanu6@gmail.com<br>Support hours: 8 AM to 10 PM, every day.<br>WhatsApp: <a href="https://wa.me/919529199382" target="_blank" rel="noopener" style="color:var(--pri)">9529199382</a><br>Instagram: <a href="https://instagram.com/shantu1364" target="_blank" rel="noopener" style="color:var(--pri)">@shantu1364</a><br>YouTube: <a href="https://youtube.com/@mixdudee" target="_blank" rel="noopener" style="color:var(--pri)">@mixdudee</a></p>
+<h2 id="terms">Terms &amp; Conditions</h2>
+<ul><li>FetchNow is a pickup-and-drop delivery service operating in Nanded.</li>
+<li>Customers must provide accurate pickup and drop addresses and a working mobile number.</li>
+<li>Illegal items, explosives, weapons, narcotics and prescription-only medicines are not accepted for delivery.</li>
+<li>Fare: ₹30 for the first 4 km, then ₹10 per additional km. The final price may vary slightly based on actual distance.</li>
+<li>Delivery times are estimates. Delays may occur due to traffic, weather or other circumstances.</li>
+<li>FetchNow is not responsible for any loss caused by incorrect information provided by the customer.</li>
+<li>FetchNow may refuse or cancel an order that violates these terms.</li></ul>
+<h2 id="privacy">Privacy Policy</h2>
+<p>We collect only the information needed to fulfil your order: name, mobile number, addresses and item details. It is used solely to complete your delivery and is never sold. We do not store card or UPI details; payments are handled securely by your UPI app. To have your information removed, contact support.</p>
+<h2 id="refund">Refund &amp; Cancellation Policy</h2>
+<ul><li>If you cancel before a rider is assigned, you get a full refund.</li>
+<li>If you cancel after the rider has left for pickup, a ₹20 charge may apply.</li>
+<li>If we fail to deliver or lose your item, you get a full refund.</li>
+<li>Online payment refunds reach the original payment method within 5 to 7 working days.</li>
+<li>Cash on Delivery orders are not refunded; we will correct the error instead.</li>
+<li>For any refund, contact support with your order ID.</li></ul>
+</div>
+<footer><div class="w"><b>FetchNow</b> — We bring it. You get it.<br>📞 +91 95291 99382 &nbsp; ✉️ vaidyashantanu6@gmail.com &nbsp; 📍 Nanded, Maharashtra<br><br><div class="fl"><a href="#contact">Contact Us</a><a href="#terms">Terms</a><a href="#privacy">Privacy</a><a href="#refund">Refund Policy</a><a href="https://instagram.com/shantu1364" target="_blank" rel="noopener">Instagram</a><a href="https://youtube.com/@mixdudee" target="_blank" rel="noopener">YouTube</a></div><br>© 2026 FetchNow</div></footer>
+
+<div class="sh" id="sh"><div class="bx" id="bx"></div></div>
+<script>
+const PHONE="919529199382"; // <-- apla WhatsApp number (91 + 10 digit)
+const $=i=>document.getElementById(i);
+function calc(){const k=+$("km").value,x=Math.max(0,k-4),t=30+x*10;$("kv").textContent=k;$("k2").textContent=x;$("fd").textContent="₹"+x*10;$("tt").textContent="₹"+t;return t}
+$("km").oninput=calc;calc();
+const UPI_ID="vaidyashantanu6@oksbi"; // <-- apla UPI ID
+let O=null,pay="UPI",tm=null;
+function go(){const v=i=>$(i).value.trim();
+if(!v("pu")||!v("dr")||!v("it")||!v("nm")||!v("ph")){$("er").textContent="Please fill in all fields.";return}
+if(!/^[6-9]\d{9}$/.test(v("ph").replace(/[\s+-]|^91/g,""))){$("er").textContent="Enter a valid 10-digit mobile number.";return}
+$("er").textContent="";
+O={it:v("it"),ty:v("ty"),pu:v("pu"),dr:v("dr"),nm:v("nm"),ph:v("ph"),km:+$("km").value,tot:calc(),id:"FN"+Math.floor(1000+Math.random()*9000)};payStep()}
+function payStep(){$("bx").innerHTML=`<h3 style="margin:0 0 4px">Payment</h3><div style="color:var(--mut);font-size:14px">${O.it} • ${O.km} km • <b>₹${O.tot}</b></div>
+<div class="opt ${pay=="UPI"?"on":""}" onclick="pay='UPI';payStep()">📱<div><b>UPI (GPay / PhonePe / Paytm)</b><small>Pay now</small></div></div>
+<div class="opt ${pay=="COD"?"on":""}" onclick="pay='COD';payStep()">💵<div><b>Cash on Delivery</b><small>Pay cash to the rider</small></div></div>
+<button class="btn" style="width:100%;margin-top:8px" onclick="confirmO()">${pay=="UPI"?"Pay ₹"+O.tot+" & Book":"Book (Pay on Delivery)"}</button>
+<button class="btn o" style="width:100%;margin-top:8px" onclick="$('sh').style.display='none'">Cancel</button>`;$("sh").style.display="flex"}
+function confirmO(){O.pay=pay;
+if(pay=="UPI"){const a=document.createElement("a");a.href=`upi://pay?pa=${UPI_ID}&pn=FetchNow&am=${O.tot}&cu=INR&tn=${O.id}`;document.body.appendChild(a);a.click();a.remove()}
+track()}
+function wa(){const m=["FetchNow Order "+O.id,"Item: "+O.it+" ("+O.ty+")","Pickup: "+O.pu,"Drop: "+O.dr,"Distance: "+O.km+" km","Total: ₹"+O.tot,"Payment: "+(O.pay=="UPI"?"UPI":"Cash on Delivery"),"Name: "+O.nm,"Mobile: "+O.ph].join("\n");window.open("https://wa.me/"+PHONE+"?text="+encodeURIComponent(m),"_blank")}
+function track(){const labs=["📦<br>Placed","🧑<br>Rider assigned","🎒<br>Picked up","🛵<br>On the way","🏠<br>Delivered"];
+$("bx").innerHTML=`<h3 style="margin:0">Order #${O.id}</h3><div style="color:var(--mut);font-size:13px">${O.pay=="UPI"?"Payment: UPI":"Payment: Cash on Delivery (₹"+O.tot+")"}</div>
+<svg class="map" viewBox="0 0 320 180" style="margin-top:10px"><g stroke="#d9cfa0" stroke-width="1" opacity=".5"><path d="M0 60H320M0 120H320M80 0V180M180 0V180M260 0V180"/></g>
+<path id="rt" d="M40 140 C100 150 110 60 170 90 S260 40 285 40" fill="none" stroke="#f7b500" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/>
+<text x="40" y="145" font-size="22" text-anchor="middle">📍</text><text x="285" y="45" font-size="22" text-anchor="middle">🏠</text>
+<text id="rr" font-size="26" text-anchor="middle">🛵</text></svg>
+<div class="st" id="st">${labs.map(l=>`<div>${l}</div>`).join("")}</div>
+<div class="rd"><div><b>Rider</b> assigned after confirmation<br><small id="eta" style="color:var(--mut)"></small></div><a class="btn" style="padding:8px 14px" href="tel:+${PHONE}">📞 Call us</a></div>
+<button class="btn" style="width:100%;margin-top:10px" onclick="wa()">Confirm order on WhatsApp</button>
+<button class="btn o" style="width:100%;margin-top:8px" onclick="clearInterval(tm);$('sh').style.display='none'">Close</button>
+<div class="dm">Preview only: this animation is a demo. Your order is confirmed once you send it on WhatsApp.</div>`;
+const rt=$("rt"),L=rt.getTotalLength(),rr=$("rr"),N=Math.max(2,Math.ceil(O.km*3));let p=0;clearInterval(tm);
+tm=setInterval(()=>{p=Math.min(1,p+0.01);const q=rt.getPointAtLength(L*p);rr.setAttribute("x",q.x);rr.setAttribute("y",q.y);
+const i=p<.05?0:p<.2?1:p<.3?2:p<1?3:4;[...$("st").children].forEach((e,k)=>e.className=k<=i?"d":"");
+$("eta").textContent=p>=1?"Delivered ✅":"ETA "+Math.max(1,Math.ceil(N*(1-p)))+" min";if(p>=1)clearInterval(tm)},300)}
+function partner(){window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent("I want to become a FetchNow delivery partner.")}`,"_blank")}
+</script></body></html>
